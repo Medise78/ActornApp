@@ -1,6 +1,7 @@
 package com.mahdi.actorn.ui.details
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -43,20 +44,30 @@ fun DetailsScreen(
     val uiState = viewModel.uiState
     val actorProfile = "${uiState.actorData?.profileUrl}"
 
-    Surface(color = MaterialTheme.colors.background) {
-
-        Box {
-            ActorBackgroundWithGradiantForeground(imageUrl = actorProfile)
-            Column {
-                ContentDetail(
-                    navigateUp = navigateUp,
-                    uiState = uiState,
-                    selectedMovie = selectedMovie
-                )
-            }
+    if (uiState.isFetchingDetail){
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)){
             ShowProgressIndicator(isLoadingData = uiState.isFetchingDetail)
         }
+    }else{
+        Surface(color = MaterialTheme.colors.background) {
+
+            Box {
+                ActorBackgroundWithGradiantForeground(imageUrl = actorProfile)
+                Column {
+                    ContentDetail(
+                        navigateUp = navigateUp,
+                        uiState = uiState,
+                        selectedMovie = selectedMovie
+                    )
+                }
+
+            }
+        }
     }
+
+
 }
 
 @Composable
@@ -175,7 +186,8 @@ private fun ActorCastMovie(
             ),
             colorFilter = ColorFilter.tint(color = Color.White),
             alpha = 0.8f,
-            modifier = Modifier.padding(start = 20.dp)
+            modifier = Modifier
+                .padding(start = 20.dp)
                 .size(40.dp)
         )
         CategoryTitle(title = stringResource(id = com.mahdi.actorn. R.string.cast_movie_title))
